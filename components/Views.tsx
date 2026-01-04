@@ -194,27 +194,27 @@ export const AboutUs = () => {
   // Correctly defined team with gendered avatars as requested
   const DEFAULT_TEAM = [
     { 
-      name: "Livis", 
+      name: "Livis Kumar A/L Selva Kumar", 
       role: "CEO", 
       photo: "https://drive.google.com/thumbnail?id=1YYJZ-6ysxeXMsABwG9fAtsBF0XJsfuRg&sz=w1000" 
     },
     { 
-      name: "Yuan Kang", 
+      name: "Lau Yuan Kang", 
       role: "CFO", 
       photo: "https://drive.google.com/thumbnail?id=1f2rSdb-9TLysV6aAbuDsNzCiUMtRzbBj&sz=w1000" 
     },
     { 
-      name: "Aiman", 
+      name: "Muhammad Nur Aiman", 
       role: "COO", 
       photo: "https://drive.google.com/thumbnail?id=1Udkhw2XWiTnmP36IPbOrWEEF4EyBsgSD&sz=w1000" 
     },
     { 
-      name: "Premi", 
+      name: "Premi A/P Karunanithi", 
       role: "CMO", 
       photo: "https://drive.google.com/thumbnail?id=1Ryt57nOk3FmQJi6A1qln9gc5u0-5tu-P&sz=w1000" 
     },
     { 
-      name: "Yi Han", 
+      name: "Yong Yi Han", 
       role: "CPO", 
       photo: "https://drive.google.com/thumbnail?id=1vA046bqlxrHWGIICsSxqvIzgCKmMRA-_&sz=w1000" 
     },
