@@ -1,5 +1,5 @@
 
-import { Timestamp } from 'firebase/firestore';
+import { Timestamp } from 'firebase';
 
 declare global {
   var __firebase_config: string | undefined;
@@ -12,7 +12,7 @@ export interface UserProfile {
   displayName: string | null;
   email: string | null;
   photoURL: string | null;
-  // Fix: Added 'admin' to the allowed roles to support administrative accounts and resolve assignment errors.
+  // Added 'admin' to the allowed role types to fix assignability errors for administrative users
   role?: 'user' | 'admin';
   joinedAt?: Timestamp | Date;
 }
