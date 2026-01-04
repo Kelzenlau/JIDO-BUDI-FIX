@@ -8,7 +8,7 @@ export const DEFAULT_GAME_CONFIG = {
 export type MediaType = "image" | "video";
 
 export const DEFAULT_HOME_CONFIG = {
-  title: "Snack Match & Arcade",
+  title: "Welcome to Jido Budi",
   subtitle:
     "Choose your game, earn high scores, and win real vouchers from our virtual vending machine!",
   mediaType: "video" as const,
@@ -56,8 +56,8 @@ export const INITIAL_PRODUCTS = [
 ];
 
 export const DEFAULT_ANNOUNCEMENT = {
-  text: "",
-  active: false,
+  text: "Hallo, Jido Budi Vending Machine Now is available at FEP!!!",
+  active: true,
   color: "bg-blue-600"
 };
 
