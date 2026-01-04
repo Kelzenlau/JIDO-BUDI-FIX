@@ -1,8 +1,11 @@
 
-// Fix: Use named imports for Firebase modular SDK to resolve potential module resolution issues with namespace imports
-import { initializeApp, FirebaseApp } from 'firebase/app';
-import { getAuth, Auth } from 'firebase/auth';
-import { getFirestore, Firestore } from 'firebase/firestore';
+// Fix: Separated value and type imports for the Firebase modular SDK to resolve potential module resolution issues that can occur in certain TypeScript environments.
+import { initializeApp } from 'firebase/app';
+import type { FirebaseApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import type { Auth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import type { Firestore } from 'firebase/firestore';
 
 // Fallback config for development/safety if environment variables are missing
 const defaultFirebaseConfig = {
