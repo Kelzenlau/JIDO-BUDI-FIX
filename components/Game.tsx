@@ -45,9 +45,17 @@ const updateLeaderboard = async (score: number, user: UserProfile, db: any, appI
             if (currentData.score >= score) shouldUpdate = false;
         }
         if (shouldUpdate) {
-            await setDoc(leaderboardRef, {
-                name: user.displayName || 'Anonymous', score: score, photoURL: user.photoURL, updatedAt: serverTimestamp()
-            });
+            await setDoc(
+               leaderboardRef,
+               {
+                 uid: user.uid,
+                 name: user.displayName || 'Anonymous',
+                 score: Number(score) || 0,
+                 photoURL: user.photoURL || '',
+                 updatedAt: serverTimestamp(),
+               },
+               { merge: true }
+             );
         }
     } catch (e) { console.warn("Leaderboard update failed (Demo Mode)"); }
 };
@@ -157,7 +165,8 @@ const playSound = (type: 'match' | 'swap' | 'error' | 'win' | 'collect' | 'gameo
 
 export const GameOverScreen = ({ score, voucherCode, user, onOpenAuth, onPlayAgain, emailStatus, onResendEmail }: any) => {
     const { t } = useContext(LanguageContext);
-    useEffect(() => { if(voucherCode && user) updateLeaderboard(score, user, db, appId); }, [voucherCode, user, score]);
+    useEffect(() => { 
+  if(user) updateLeaderboard(score, user, db, appId); }, [user, score]); }, [voucherCode, user, score]);
     return (
     <div className="absolute inset-0 bg-slate-950/95 backdrop-blur-xl z-30 flex flex-col items-center justify-center text-center p-6 animate-in fade-in zoom-in duration-300">
         {voucherCode ? (
