@@ -271,13 +271,17 @@ export const AboutUs = () => {
                 <p className="max-w-3xl mx-auto text-slate-400 text-xl leading-relaxed relative z-10 font-medium">
                     {t('mission_desc')}
                 </p>
+                <p className="mt-6 max-w-3xl mx-auto text-slate-300 text-lg leading-relaxed relative z-10">
+                     Our mission is to combine smart vending technology with engaging gamification,
+                     creating a fun, rewarding, and convenient experience for students and communities.
+                </p>
             </div>
 
             <div className="mt-24">
                 <h3 className="text-3xl font-black text-slate-900 mb-8 text-center">{t('visit_us')}</h3>
                 <div className="w-full h-[500px] bg-white rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white relative group">
                     <iframe 
-                        title="Jido Budi Location" 
+                        title="Jido Budi Vending Machine Location" 
                         width="100%" 
                         height="100%" 
                         id="gmap_canvas" 
