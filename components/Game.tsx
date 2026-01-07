@@ -225,7 +225,7 @@ export const Match3Game = ({ user, onOpenAuth, onBack }: { user: UserProfile | n
       getDoc(doc(db, 'artifacts', appId, 'public', 'data', 'config', 'game')).then(s => {
           const config = s.exists() ? s.data() : DEFAULT_GAME_CONFIG;
           setGameConfig(config as GameConfig);
-          setTimeLeft(config.timeLimit || 60);
+          setTimeLeft(config.timeLimit || 5);
           setBoard(createBoard(config.theme || 'default'));
       }).catch(e => { });
   }, []);
