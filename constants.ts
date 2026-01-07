@@ -1,6 +1,6 @@
 export const DEFAULT_GAME_CONFIG = {
   winScore: 1000,
-  timeLimit: 60,
+  timeLimit: 10,
   voucherProbability: 100,
   theme: 'default' as const
 };
