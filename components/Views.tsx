@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { ChevronRight, MapPin, Calendar, Shield, Ticket, Gamepad2, Loader, ShoppingCart, Plus, Star, Instagram, AlertTriangle, Lightbulb, Zap, TrendingUp, Fingerprint, Clock, Smartphone, Info } from 'lucide-react';
+import { ChevronRight, MapPin, Calendar, Shield, Ticket, Gamepad2, Loader, ShoppingCart, Plus, Star, Instagram, LogIn, User } from 'lucide-react';
 import { getDoc, doc, collection, onSnapshot, query, addDoc, updateDoc } from 'firebase/firestore';
 import { db, appId } from '../services/firebase';
 import { JidoBudiLogo } from './Layout';
@@ -110,7 +110,6 @@ export const AdsSection = () => {
 
     return (
         <div className="flex flex-col space-y-16 py-16">
-            {/* Dynamic Ads from Firebase */}
             {config.active && config.url && (
                 <section className="px-6">
                     {config.link ? (
@@ -123,7 +122,6 @@ export const AdsSection = () => {
                 </section>
             )}
 
-            {/* Fixed Social Ads Grid: Instagram Reels */}
             <section className="px-6">
                 <div className="max-w-7xl mx-auto">
                     <div className="flex items-center justify-center gap-3 mb-10">
@@ -138,9 +136,7 @@ export const AdsSection = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 justify-items-center">
                         {SOCIAL_REELS.map((reelUrl, idx) => (
                             <div key={idx} className="relative group w-full max-w-[360px] transform transition-all duration-500 hover:-translate-y-2">
-                                {/* Decorative Glow */}
                                 <div className="absolute -inset-1 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-[2.5rem] blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
-                                
                                 <div className="relative bg-slate-900/60 backdrop-blur-2xl rounded-[2.2rem] overflow-hidden border border-white/10 shadow-2xl flex flex-col">
                                     <div className="h-8 bg-slate-800/50 flex items-center px-5 gap-1.5 border-b border-white/5">
                                         <div className="w-2 h-2 rounded-full bg-red-400/30"></div>
@@ -238,130 +234,46 @@ export const ProductShowcase = () => {
 export const AboutUs = () => {
   const { t } = useContext(LanguageContext);
   const DEFAULT_TEAM = [
-    { name: "Livis Kumar A/L Selva Kumar", role: "CEO", photo: "https://drive.google.com/thumbnail?id=1YYJZ-6ysxeXMsABwG9fAtsBF0XJsfuRg&sz=w1000" },
+    { name: "Livis Kumar A/L Selvakumar", role: "CEO", photo: "https://drive.google.com/thumbnail?id=1YYJZ-6ysxeXMsABwG9fAtsBF0XJsfuRg&sz=w1000" },
     { name: "Lau Yuan Kang", role: "CFO", photo: "https://drive.google.com/thumbnail?id=1f2rSdb-9TLysV6aAbuDsNzCiUMtRzbBj&sz=w1000" },
     { name: "Muhammad Nur Aiman", role: "COO", photo: "https://drive.google.com/thumbnail?id=1Udkhw2XWiTnmP36IPbOrWEEF4EyBsgSD&sz=w1000" },
-    { name: "Premi A/P Karunanithi", role: "CMO", photo: "https://drive.google.com/thumbnail?id=1Ryt57nOk3FmQJi6A1qln9gc5u0-5tu-P&sz=w1000" },
+    { name: "Premi A/P Karunaniti", role: "CMO", photo: "https://drive.google.com/thumbnail?id=1Ryt57nOk3FmQJi6A1qln9gc5u0-5tu-P&sz=w1000" },
     { name: "Yong Yi Han", role: "CPO", photo: "https://drive.google.com/thumbnail?id=1vA046bqlxrHWGIICsSxqvIzgCKmMRA-_&sz=w1000" },
-  ];
-
-  const PROBLEMS = [
-    { title: "Akses Terhad & Sesak", desc: "Akses makanan/minuman di FEP terhad & sesak terutamanya pada waktu puncak.", icon: <MapPin size={24} /> },
-    { title: "Layanan Konvensional", desc: "Mesin layan diri konvensional kurang interaktif dan tiada sistem ganjaran.", icon: <Gamepad2 size={24} /> },
-    { title: "Tiada Platform Digital", desc: "Tiada platform digital berpusat untuk promosi & maklumat produk terkini.", icon: <Smartphone size={24} /> }
-  ];
-
-  const ADVANTAGES = [
-    { title: "Engaging Experience", desc: "Lebih menarik berbanding mesin biasa dengan model: Beli + Main + Ganjaran.", icon: <Zap size={24} /> },
-    { title: "Akses Pantas", desc: "Dapatkan snek kegemaran anda dengan segera tanpa perlu beratur panjang.", icon: <Clock size={24} /> },
-    { title: "Identiti Jenama", desc: "Warna UKM yang ikonik, konsep automasi pintar, dan nilai kemanusiaan.", icon: <Fingerprint size={24} /> },
-    { title: "Potensi Berkembang", desc: "Reka bentuk yang scalable untuk berkembang ke pelbagai fakulti dan kampus lain.", icon: <TrendingUp size={24} /> }
   ];
 
   return (
     <section className="py-24 px-6 relative">
         <div className="max-w-6xl mx-auto relative z-10">
-            {/* Mission Section */}
-            <div className="text-center mb-20">
-                <h2 className="text-xs font-black text-cyan-400 uppercase tracking-[0.4em] mb-4">Empowering Snacks</h2>
-                <h3 className="text-5xl font-black text-white mb-6 uppercase tracking-tighter">{t('about_title')}</h3>
-                <p className="text-slate-400 max-w-2xl mx-auto text-xl mb-12 leading-relaxed">{t('about_desc')}</p>
-                <div className="inline-flex items-center gap-3 px-8 py-4 bg-white/5 rounded-full border border-white/10 text-slate-300 font-bold backdrop-blur-md shadow-2xl">
-                    <MapPin size={20} className="text-cyan-400" />
-                    <span className="text-xs uppercase tracking-[0.2em]">Faculty of Economics and Management (FEP), UKM</span>
-                </div>
-            </div>
-
-            {/* Problem Section */}
-            <div className="mb-24">
-                <div className="flex items-center gap-4 mb-10">
-                    <div className="p-3 bg-red-500/10 text-red-500 rounded-2xl border border-red-500/20"><AlertTriangle size={24} /></div>
-                    <h3 className="text-3xl font-black text-white uppercase tracking-tight">MASALAH UTAMA</h3>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {PROBLEMS.map((p, i) => (
-                        <div key={i} className="p-8 bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-[2.5rem] group hover:border-red-500/30 transition-all duration-500">
-                            <div className="w-12 h-12 bg-red-500/10 rounded-2xl flex items-center justify-center text-red-400 mb-6 group-hover:scale-110 transition-transform">
-                                {p.icon}
-                            </div>
-                            <h4 className="text-xl font-black text-white mb-4 uppercase">{p.title}</h4>
-                            <p className="text-slate-500 text-sm leading-relaxed">{p.desc}</p>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {/* Advantages Section */}
-            <div className="mb-24">
-                <div className="flex items-center gap-4 mb-10">
-                    <div className="p-3 bg-cyan-500/10 text-cyan-500 rounded-2xl border border-cyan-500/20"><Lightbulb size={24} /></div>
-                    <h3 className="text-3xl font-black text-white uppercase tracking-tight">KELEBIHAN PRODUK</h3>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {ADVANTAGES.map((a, i) => (
-                        <div key={i} className="p-8 bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-[2.5rem] group hover:border-cyan-500/30 transition-all duration-500">
-                            <div className="w-12 h-12 bg-cyan-500/10 rounded-2xl flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition-transform">
-                                {a.icon}
-                            </div>
-                            <h4 className="text-lg font-black text-white mb-4 uppercase tracking-tight">{a.title}</h4>
-                            <p className="text-slate-500 text-xs leading-relaxed">{a.desc}</p>
-                        </div>
-                    ))}
+            <div className="text-center mb-16">
+                <h2 className="text-4xl font-black text-white mb-4 uppercase tracking-tighter">{t('about_title')}</h2>
+                <p className="text-slate-400 max-w-2xl mx-auto text-lg mb-8">{t('about_desc')}</p>
+                <div className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 rounded-full border border-white/10 text-slate-300 font-bold backdrop-blur-md">
+                    <MapPin size={18} className="text-cyan-400" />
+                    <span className="text-xs uppercase tracking-widest">Faculty of Economics and Management (FEP)</span>
                 </div>
             </div>
             
-            {/* Team Grid */}
-            <div className="mb-24">
-                <h3 className="text-3xl font-black text-white mb-10 text-center uppercase tracking-tight">Meet The Visionaries</h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-                    {DEFAULT_TEAM.map((member, index) => (
-                        <div key={index} className="bg-slate-900/40 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/5 flex flex-col items-center text-center hover:-translate-y-4 transition-all duration-500 group">
-                            <div className="w-24 h-24 rounded-full overflow-hidden mb-6 bg-slate-950 border-2 border-white/10 shadow-2xl group-hover:scale-110 group-hover:border-cyan-500/50 transition-all">
-                                <img 
-                                    src={member.photo || `https://api.dicebear.com/7.x/avataaars/svg?seed=${member.name}`} 
-                                    alt={member.name} 
-                                    className="w-full h-full object-cover" 
-                                />
-                            </div>
-                            <h3 className="text-md font-black text-white mb-2 leading-tight h-10 flex items-center">{member.name}</h3>
-                            <span className="mt-2 px-4 py-1 bg-white/5 text-[10px] font-black text-slate-400 uppercase tracking-widest rounded-full group-hover:bg-cyan-500 group-hover:text-slate-950 transition-colors">
-                                {member.role}
-                            </span>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+                {DEFAULT_TEAM.map((member, index) => (
+                    <div key={index} className="bg-slate-900/40 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/5 flex flex-col items-center text-center hover:-translate-y-4 transition-all duration-500 group">
+                        <div className="w-24 h-24 rounded-full overflow-hidden mb-6 bg-slate-950 border-2 border-white/10 shadow-2xl group-hover:scale-110 group-hover:border-cyan-500/50 transition-all">
+                            <img src={member.photo || `https://api.dicebear.com/7.x/avataaars/svg?seed=${member.name}`} alt={member.name} className="w-full h-full object-cover" />
                         </div>
-                    ))}
-                </div>
-            </div>
-
-            {/* Mission Statement */}
-            <div className="mt-20 bg-slate-900/60 backdrop-blur-2xl rounded-[3rem] p-12 text-center text-white border border-white/5 shadow-2xl relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <h3 className="text-3xl font-black mb-6 tracking-tight uppercase">{t('mission_title')}</h3>
-                <p className="max-w-3xl mx-auto text-slate-400 text-xl leading-relaxed font-medium mb-6">{t('mission_desc')}</p>
-                <p className="max-w-3xl mx-auto text-slate-300 text-lg leading-relaxed relative z-10 italic">
-                    "Our mission is to combine smart vending technology with engaging gamification,
-                     creating a fun, rewarding, and convenient experience for students and communities."
-                </p>
-            </div>
-
-            {/* Map Section */}
-            <div className="mt-24">
-                <div className="flex items-center justify-center gap-3 mb-8">
-                    <MapPin className="text-cyan-400" />
-                    <h3 className="text-2xl font-black text-white uppercase tracking-widest">{t('visit_us')}</h3>
-                </div>
-                <div className="w-full h-[500px] bg-slate-950 rounded-[3rem] overflow-hidden border-8 border-slate-900 shadow-2xl relative">
-                    <iframe 
-                        title="Jido Budi Vending Machine Location" 
-                        width="100%" 
-                        height="100%" 
-                        src="https://maps.google.com/maps?q=Faculty%20of%20Economics%20%26%20Management%2C%2043600%20Bangi%2C%20Selangor&t=&z=15&ie=UTF8&iwloc=&output=embed" 
-                        frameBorder="0" 
-                        className="absolute inset-0 grayscale invert opacity-60 hover:grayscale-0 hover:invert-0 hover:opacity-100 transition-all duration-1000"
-                    ></iframe>
-                    <div className="absolute bottom-10 left-10 p-6 bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl max-w-xs animate-in slide-in-from-left duration-700">
-                        <p className="text-white font-black text-sm uppercase mb-1">Location Info</p>
-                        <p className="text-slate-400 text-xs leading-relaxed">Located at the heart of FEP UKM, providing 24/7 access to snacks and entertainment.</p>
+                        <h3 className="text-xl font-black text-white mb-2">{member.name}</h3>
+                        <span className="px-4 py-1 bg-white/5 text-[10px] font-black text-slate-400 uppercase tracking-widest rounded-full group-hover:bg-cyan-500 group-hover:text-slate-950 transition-colors">{member.role}</span>
                     </div>
+                ))}
+            </div>
+
+            <div className="mt-20 bg-slate-900/60 backdrop-blur-2xl rounded-[3rem] p-12 text-center text-white border border-white/5 shadow-2xl">
+                <h3 className="text-3xl font-black mb-6 tracking-tight uppercase">{t('mission_title')}</h3>
+                <p className="max-w-3xl mx-auto text-slate-400 text-xl leading-relaxed font-medium">{t('mission_desc')}</p>
+            </div>
+
+            <div className="mt-24">
+                <h3 className="text-2xl font-black text-white mb-8 text-center uppercase tracking-widest">{t('visit_us')}</h3>
+                <div className="w-full h-[500px] bg-slate-950 rounded-[3rem] overflow-hidden border-8 border-slate-900 shadow-2xl relative">
+                    <iframe title="Jido Budi" width="100%" height="100%" src="https://maps.google.com/maps?q=Faculty%20of%20Economics%20%26%20Management%2C%2043600%20Bangi%2C%20Selangor&t=&z=15&ie=UTF8&iwloc=&output=embed" frameBorder="0" className="absolute inset-0 grayscale invert opacity-60 hover:grayscale-0 hover:invert-0 hover:opacity-100 transition-all duration-1000"></iframe>
                 </div>
             </div>
         </div>
@@ -406,7 +318,7 @@ export const LeaderboardPage = () => {
     );
 };
 
-export const ProfilePage = ({ user }: { user: UserProfile }) => {
+export const ProfilePage = ({ user, onGoLogin }: { user: UserProfile | null, onGoLogin: () => void }) => {
     const { t } = useContext(LanguageContext);
     const [userVouchers, setUserVouchers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -421,11 +333,13 @@ export const ProfilePage = ({ user }: { user: UserProfile }) => {
                 setUserVouchers(vouchers);
                 setLoading(false); 
             }, () => setLoading(false));
+        } else {
+            setLoading(false);
         }
     }, [user]);
 
     const handleRedeem = async () => {
-        if(!redeemCode) return;
+        if(!user || !redeemCode) return;
         try {
             const codeRef = doc(db, 'artifacts', appId, 'public', 'data', 'flash_codes', redeemCode);
             const codeSnap = await getDoc(codeRef);
@@ -444,6 +358,20 @@ export const ProfilePage = ({ user }: { user: UserProfile }) => {
     }
 
     if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader className="animate-spin text-cyan-400" /></div>;
+
+    if (!user) return (
+        <section className="py-32 px-6 min-h-[70vh] flex flex-col items-center justify-center text-center">
+            <div className="w-24 h-24 bg-slate-900/50 rounded-full flex items-center justify-center mb-8 border border-white/10 shadow-2xl">
+                <User size={48} className="text-slate-600" />
+            </div>
+            <h2 className="text-3xl font-black text-white mb-4 tracking-tighter uppercase">{t('profile_title')}</h2>
+            <p className="text-slate-400 mb-10 max-w-sm font-medium">{t('login_claim')}</p>
+            <button onClick={onGoLogin} className="flex items-center gap-3 px-12 py-5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-black rounded-full shadow-[0_0_30px_rgba(6,182,212,0.4)] hover:scale-105 transition-all uppercase tracking-widest text-sm">
+                <LogIn size={20} />
+                {t('nav_login')}
+            </button>
+        </section>
+    );
 
     return (
         <section className="py-24 px-6 relative">
