@@ -14,7 +14,6 @@ import { GameSelection, Match3Game, SnackSwipeGame } from './components/Game';
 import { CartDrawer } from './components/Cart';
 
 const QuantumBackground = () => {
-  // 生成随机粒子以增加细节感
   const particles = useMemo(() => {
     return Array.from({ length: 25 }).map((_, i) => ({
       id: i,
@@ -28,40 +27,12 @@ const QuantumBackground = () => {
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-slate-950">
-      {/* 核心光球 1 - 蓝青色 */}
-      <div 
-        className="quantum-sphere bg-cyan-500/20" 
-        style={{ width: '60vw', height: '60vw', top: '-10%', left: '-10%', animationDelay: '0s' }}
-      />
-      {/* 核心光球 2 - 紫色 */}
-      <div 
-        className="quantum-sphere bg-purple-600/15" 
-        style={{ width: '70vw', height: '70vw', bottom: '-15%', right: '-10%', animationDelay: '-5s' }}
-      />
-      {/* 核心光球 3 - 靛蓝色 */}
-      <div 
-        className="quantum-sphere bg-indigo-500/10" 
-        style={{ width: '40vw', height: '40vw', top: '30%', left: '40%', animationDelay: '-12s' }}
-      />
-      
-      {/* 粒子层 */}
+      <div className="quantum-sphere bg-cyan-500/20" style={{ width: '60vw', height: '60vw', top: '-10%', left: '-10%', animationDelay: '0s' }} />
+      <div className="quantum-sphere bg-purple-600/15" style={{ width: '70vw', height: '70vw', bottom: '-15%', right: '-10%', animationDelay: '-5s' }} />
+      <div className="quantum-sphere bg-indigo-500/10" style={{ width: '40vw', height: '40vw', top: '30%', left: '40%', animationDelay: '-12s' }} />
       {particles.map(p => (
-        <div 
-          key={p.id}
-          className="particle"
-          style={{
-            left: p.left,
-            top: p.top,
-            width: p.size,
-            height: p.size,
-            animation: `particle-twinkle ${p.duration} infinite ease-in-out`,
-            animationDelay: p.delay,
-            boxShadow: `0 0 10px white`
-          }}
-        />
+        <div key={p.id} className="particle" style={{ left: p.left, top: p.top, width: p.size, height: p.size, animation: `particle-twinkle ${p.duration} infinite ease-in-out`, animationDelay: p.delay, boxShadow: `0 0 10px white` }} />
       ))}
-
-      {/* 磨砂玻璃叠加层，增加高级感 */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(2,6,23,0.4)_100%)]"></div>
     </div>
   );
@@ -69,7 +40,6 @@ const QuantumBackground = () => {
 
 function AppContent() {
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState('home'); 
   const [activeGameMode, setActiveGameMode] = useState<string | null>(null); 
   const [authLoading, setAuthLoading] = useState(true);
@@ -81,7 +51,7 @@ function AppContent() {
     return () => unsubscribe();
   }, []);
 
-  const handleLogout = async () => { await signOut(auth); setUser(null); };
+  const handleLogout = async () => { await signOut(auth); setUser(null); setCurrentPage('home'); };
 
   if (authLoading) return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center">
@@ -93,8 +63,6 @@ function AppContent() {
     </div>
   );
 
-  if (!user) return <LoginPage setUser={setUser} />;
-
   const renderPage = () => {
     switch(currentPage) {
         case 'home': return <><Hero onPlay={() => setCurrentPage('game')} /><AdsSection /></>;
@@ -105,14 +73,15 @@ function AppContent() {
               <GameSelection onSelectGame={setActiveGameMode} />
             ) : (
               activeGameMode === 'match3' ? 
-                <Match3Game user={user} onOpenAuth={() => setIsAuthOpen(true)} onBack={() => setActiveGameMode(null)} /> : 
-                <SnackSwipeGame user={user} onOpenAuth={() => setIsAuthOpen(true)} onBack={() => setActiveGameMode(null)} />
+                <Match3Game user={user} onOpenAuth={() => setCurrentPage('login')} onBack={() => setActiveGameMode(null)} /> : 
+                <SnackSwipeGame user={user} onOpenAuth={() => setCurrentPage('login')} onBack={() => setActiveGameMode(null)} />
             )}
           </div>
         );
         case 'leaderboard': return <div className="pt-20"><LeaderboardPage /></div>;
         case 'about': return <div className="pt-20"><AboutUs /></div>;
-        case 'profile': return <div className="pt-20"><ProfilePage user={user} /></div>;
+        case 'profile': return <div className="pt-20"><ProfilePage user={user} onGoLogin={() => setCurrentPage('login')} /></div>;
+        case 'login': return <LoginPage setUser={(u) => { setUser(u); setCurrentPage('home'); }} onBack={() => setCurrentPage('home')} />;
         default: return <Hero onPlay={() => setCurrentPage('game')} />;
     }
   };
@@ -121,11 +90,11 @@ function AppContent() {
     <div className="font-sans antialiased text-slate-200 overflow-x-hidden w-full flex flex-col min-h-screen relative">
       <QuantumBackground />
       <div className="relative z-10 flex flex-col min-h-screen">
-        {!activeGameMode && <AnnouncementBar />}
-        {!activeGameMode && (
+        {!activeGameMode && currentPage !== 'login' && <AnnouncementBar />}
+        {!activeGameMode && currentPage !== 'login' && (
           <Navbar 
             user={user} 
-            onOpenAuth={() => setIsAuthOpen(true)} 
+            onOpenAuth={() => setCurrentPage('login')} 
             onLogout={handleLogout} 
             activePage={currentPage} 
             setActivePage={(page) => { 
@@ -135,8 +104,8 @@ function AppContent() {
           />
         )}
         <main className="flex-grow">{renderPage()}</main>
-        {!activeGameMode && <Footer />}
-        {!activeGameMode && <WhatsAppFloat />}
+        {!activeGameMode && currentPage !== 'login' && <Footer />}
+        {!activeGameMode && currentPage !== 'login' && <WhatsAppFloat />}
         <CartDrawer />
       </div>
     </div>
