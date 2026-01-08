@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Menu, X, Home, Package, Gamepad2, Trophy, Users, LogOut, Globe, MessageCircle, Megaphone, Instagram, ShoppingCart } from 'lucide-react';
+import { Menu, X, Home, Package, Gamepad2, Trophy, Users, LogOut, Globe, MessageCircle, Megaphone, Instagram, ShoppingCart, LogIn } from 'lucide-react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db, appId } from '../services/firebase';
 import { UserProfile } from '../types';
@@ -71,7 +71,15 @@ export const Navbar = ({ onOpenAuth, user, onLogout, activePage, setActivePage }
     <nav className="fixed top-0 w-full z-50 px-6 h-12 bg-slate-900/80 backdrop-blur-md border-b border-white/5 flex items-center">
       <div className="max-w-7xl mx-auto w-full flex justify-between items-center h-full">
         <div className="flex items-center -ml-4 h-full"><button onClick={() => setActivePage('home')} className="p-1 hover:bg-white/10 transition-colors rounded-2xl flex items-center h-full"><JidoBudiLogo className="transform scale-[0.3] origin-left" /></button></div>
-        {user && <div className="hidden md:flex items-center space-x-8"><NavLink page="home" label={t('nav_home')} icon={Home} /><NavLink page="products" label={t('nav_products')} icon={Package} /><NavLink page="game" label={t('nav_game')} icon={Gamepad2} /><NavLink page="leaderboard" label={t('nav_leaderboard')} icon={Trophy} /><NavLink page="about" label={t('nav_about')} icon={Users} /></div>}
+        
+        <div className="hidden md:flex items-center space-x-8">
+            <NavLink page="home" label={t('nav_home')} icon={Home} />
+            <NavLink page="products" label={t('nav_products')} icon={Package} />
+            <NavLink page="game" label={t('nav_game')} icon={Gamepad2} />
+            <NavLink page="leaderboard" label={t('nav_leaderboard')} icon={Trophy} />
+            <NavLink page="about" label={t('nav_about')} icon={Users} />
+        </div>
+
         <div className="flex items-center space-x-4">
             <button onClick={() => setIsCartOpen(true)} className="relative p-2 text-slate-400 hover:text-white transition-colors">
                 <ShoppingCart size={20} />
@@ -95,11 +103,66 @@ export const Navbar = ({ onOpenAuth, user, onLogout, activePage, setActivePage }
                     </div>
                 )}
             </div>
-            {user && (<div className="hidden md:flex items-center"><div className="flex items-center gap-3 bg-white/10 px-3 py-1.5 rounded-full border border-white/10 cursor-pointer hover:bg-white/20 transition-colors" onClick={() => setActivePage('profile')}><img src={user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.uid}`} alt="User" className="w-8 h-8 rounded-full bg-slate-700" /><div className="flex flex-col"><span className="text-xs text-slate-400 leading-none">{t('hello')},</span><span className="text-sm text-white font-bold leading-none">{user.displayName || 'Gamer'}</span></div></div><button onClick={onLogout} className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-full border border-red-500/20 transition-colors ml-2" title={t('nav_logout')}><LogOut size={18} /></button></div>)}
+
+            {user ? (
+                <div className="hidden md:flex items-center">
+                    <div className="flex items-center gap-3 bg-white/10 px-3 py-1.5 rounded-full border border-white/10 cursor-pointer hover:bg-white/20 transition-colors" onClick={() => setActivePage('profile')}>
+                        <img src={user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.uid}`} alt="User" className="w-8 h-8 rounded-full bg-slate-700" />
+                        <div className="flex flex-col">
+                            <span className="text-xs text-slate-400 leading-none">{t('hello')},</span>
+                            <span className="text-sm text-white font-bold leading-none">{user.displayName || 'Gamer'}</span>
+                        </div>
+                    </div>
+                    <button onClick={onLogout} className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-full border border-red-500/20 transition-colors ml-2" title={t('nav_logout')}>
+                        <LogOut size={18} />
+                    </button>
+                </div>
+            ) : (
+                <button onClick={onOpenAuth} className="hidden md:flex items-center gap-2 px-4 py-1.5 bg-cyan-500 text-slate-950 rounded-full font-black text-xs uppercase tracking-widest hover:bg-cyan-400 transition-colors">
+                    <LogIn size={14} />
+                    {t('nav_login')}
+                </button>
+            )}
+
             <button className="md:hidden text-white" onClick={() => setIsOpen(!isOpen)}>{isOpen ? <X /> : <Menu />}</button>
         </div>
       </div>
-       {isOpen && (<div className="absolute top-full left-0 w-full bg-slate-900 border-b border-slate-800 p-4 md:hidden flex flex-col space-y-4 shadow-xl z-40"><button onClick={() => { setActivePage('home'); setIsOpen(false); }} className="text-left text-slate-300">{t('nav_home')}</button><button onClick={() => { setActivePage('products'); setIsOpen(false); }} className="text-left text-slate-300">{t('nav_products')}</button><button onClick={() => { setActivePage('game'); setIsOpen(false); }} className="text-left text-slate-300">{t('nav_game')}</button><button onClick={() => { setActivePage('leaderboard'); setIsOpen(false); }} className="text-left text-slate-300">{t('nav_leaderboard')}</button><button onClick={() => { setActivePage('about'); setIsOpen(false); }} className="text-left text-slate-300">{t('nav_about')}</button><button onClick={() => { setActivePage('profile'); setIsOpen(false); }} className="text-left text-slate-300">{t('nav_profile')}</button><div className="h-px bg-slate-800 my-2"></div><div className="flex gap-4 mb-2"><button onClick={() => setLanguage('en')} className={`text-sm ${language === 'en' ? 'text-white font-bold' : 'text-slate-400'}`}>EN</button><button onClick={() => setLanguage('ms')} className={`text-sm ${language === 'ms' ? 'text-white font-bold' : 'text-slate-400'}`}>BM</button><button onClick={() => setLanguage('zh')} className={`text-sm ${language === 'zh' ? 'text-white font-bold' : 'text-slate-400'}`}>CN</button></div>{user ? (<div className="flex items-center justify-between cursor-pointer p-2 rounded-lg hover:bg-white/5" onClick={() => { setActivePage('profile'); setIsOpen(false); }}><div className="flex items-center gap-2"><img src={user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.uid}`} alt="User" className="w-8 h-8 rounded-full bg-slate-700" /><span className="text-white font-bold">{user.displayName}</span></div><button onClick={(e) => { e.stopPropagation(); onLogout(); }} className="text-red-400 text-sm font-bold flex items-center gap-1"><LogOut size={14}/> {t('nav_logout')}</button></div>) : null}</div>)}
+
+       {isOpen && (
+           <div className="absolute top-full left-0 w-full bg-slate-900 border-b border-slate-800 p-4 md:hidden flex flex-col space-y-4 shadow-xl z-40 animate-in slide-in-from-top duration-300">
+               <button onClick={() => { setActivePage('home'); setIsOpen(false); }} className="text-left text-slate-300 font-bold uppercase text-xs tracking-widest">{t('nav_home')}</button>
+               <button onClick={() => { setActivePage('products'); setIsOpen(false); }} className="text-left text-slate-300 font-bold uppercase text-xs tracking-widest">{t('nav_products')}</button>
+               <button onClick={() => { setActivePage('game'); setIsOpen(false); }} className="text-left text-slate-300 font-bold uppercase text-xs tracking-widest">{t('nav_game')}</button>
+               <button onClick={() => { setActivePage('leaderboard'); setIsOpen(false); }} className="text-left text-slate-300 font-bold uppercase text-xs tracking-widest">{t('nav_leaderboard')}</button>
+               <button onClick={() => { setActivePage('about'); setIsOpen(false); }} className="text-left text-slate-300 font-bold uppercase text-xs tracking-widest">{t('nav_about')}</button>
+               {user ? (
+                   <button onClick={() => { setActivePage('profile'); setIsOpen(false); }} className="text-left text-slate-300 font-bold uppercase text-xs tracking-widest">{t('nav_profile')}</button>
+               ) : (
+                   <button onClick={() => { onOpenAuth(); setIsOpen(false); }} className="text-left text-cyan-400 font-black uppercase text-xs tracking-widest flex items-center gap-2">
+                       <LogIn size={14} /> {t('nav_login')}
+                   </button>
+               )}
+               
+               <div className="h-px bg-slate-800 my-2"></div>
+               <div className="flex gap-6 mb-2">
+                   <button onClick={() => setLanguage('en')} className={`text-xs font-black ${language === 'en' ? 'text-white' : 'text-slate-500'}`}>EN</button>
+                   <button onClick={() => setLanguage('ms')} className={`text-xs font-black ${language === 'ms' ? 'text-white' : 'text-slate-500'}`}>BM</button>
+                   <button onClick={() => setLanguage('zh')} className={`text-xs font-black ${language === 'zh' ? 'text-white' : 'text-slate-500'}`}>CN</button>
+               </div>
+               
+               {user && (
+                   <div className="flex items-center justify-between bg-white/5 p-3 rounded-xl">
+                       <div className="flex items-center gap-3">
+                           <img src={user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.uid}`} alt="User" className="w-8 h-8 rounded-full bg-slate-700" />
+                           <span className="text-white font-bold">{user.displayName}</span>
+                       </div>
+                       <button onClick={onLogout} className="text-red-400 text-xs font-black flex items-center gap-1 uppercase tracking-tighter">
+                           <LogOut size={14}/> {t('nav_logout')}
+                       </button>
+                   </div>
+               )}
+           </div>
+       )}
     </nav>
   );
 };
@@ -107,12 +170,22 @@ export const Navbar = ({ onOpenAuth, user, onLogout, activePage, setActivePage }
 export const Footer = () => {
     const { t } = useContext(LanguageContext);
     return (
-        <footer className="bg-[#6b5ce7] text-white py-12 px-6 border-t border-white/10">
+        <footer className="bg-slate-900 text-white py-12 px-6 border-t border-white/5">
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
-                <div className="mb-6 md:mb-0 flex flex-col items-start"><JidoBudiLogo className="transform scale-75 origin-left bg-white rounded-lg p-2" /><p className="text-white/70 text-sm max-w-xs mt-3">{t('mobile_friendly')}</p></div>
-                <div className="flex space-x-6"><a href="https://www.instagram.com/jidobudi/" target="_blank" rel="noreferrer" className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 cursor-pointer transition-colors"><Instagram size={20} /></a><a href="https://www.tiktok.com/@jido_budi" target="_blank" rel="noreferrer" className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 cursor-pointer transition-colors"><svg viewBox="0 0 24 24" fill="currentColor" height="20" width="20"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 1 0 1-7.6 6.83 6.83 0 0 0 4.46 1.68v3.91Z"></path></svg></a></div>
+                <div className="mb-6 md:mb-0 flex flex-col items-start">
+                    <JidoBudiLogo className="transform scale-75 origin-left" />
+                    <p className="text-white/40 text-xs max-w-xs mt-3 tracking-wide">{t('mobile_friendly')}</p>
+                </div>
+                <div className="flex space-x-6">
+                    <a href="https://www.instagram.com/jidobudi/" target="_blank" rel="noreferrer" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-cyan-500/20 hover:text-cyan-400 transition-all">
+                        <Instagram size={20} />
+                    </a>
+                    <a href="https://www.tiktok.com/@jido_budi" target="_blank" rel="noreferrer" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-cyan-500/20 hover:text-cyan-400 transition-all">
+                        <svg viewBox="0 0 24 24" fill="currentColor" height="20" width="20"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 1 0 1-7.6 6.83 6.83 0 0 0 4.46 1.68v3.91Z"></path></svg>
+                    </a>
+                </div>
             </div>
-            <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-white/20 text-center text-xs text-white/50">© 2025 Jido Budi {t('footer_rights')}</div>
+            <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-white/5 text-center text-[10px] text-white/30 uppercase tracking-[0.2em]">© 2025 Jido Budi {t('footer_rights')}</div>
         </footer>
     );
 };
