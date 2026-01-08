@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { User, Mail, Lock, ArrowRight, Zap, Cpu, Scan, Atom, Code } from 'lucide-react';
+import { User, Mail, Lock, ArrowRight, Zap, Cpu, Scan, Atom, Code, X } from 'lucide-react';
 import { signInAnonymously, signInWithCustomToken, updateProfile } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db, appId } from '../services/firebase';
@@ -14,7 +14,7 @@ const hashPassword = async (string: string) => {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 };
 
-export const LoginPage = ({ setUser }: { setUser: (u: UserProfile) => void }) => {
+export const LoginPage = ({ setUser, onBack }: { setUser: (u: UserProfile) => void, onBack?: () => void }) => {
     const { t, language, setLanguage } = useContext(LanguageContext);
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
@@ -28,7 +28,6 @@ export const LoginPage = ({ setUser }: { setUser: (u: UserProfile) => void }) =>
         setIsLoading(true);
         setError('');
         
-        // --- 1. ADMIN BYPASS (Hardcoded for Demo) ---
         if (isLogin && name.toLowerCase() === 'admin') {
              if (password === 'admin123') {
                 setTimeout(() => {
@@ -49,7 +48,6 @@ export const LoginPage = ({ setUser }: { setUser: (u: UserProfile) => void }) =>
             }
         }
 
-        // --- 2. REGULAR USER FLOW ---
         try {
             if (!auth.currentUser) {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -91,7 +89,6 @@ export const LoginPage = ({ setUser }: { setUser: (u: UserProfile) => void }) =>
             if (err.message === "WRONG_PASSWORD") { setError(t('error_wrong_password')); setIsLoading(false); return; }
             if (err.message === "USER_EXISTS") { setError(t('error_user_exists')); setIsLoading(false); return; }
 
-            // --- 3. FALLBACK: OFFLINE USER LOGIN ---
             setTimeout(() => {
                 const demoUser: UserProfile = {
                     uid: 'guest-' + Math.random().toString(36).substr(2, 9),
@@ -109,7 +106,6 @@ export const LoginPage = ({ setUser }: { setUser: (u: UserProfile) => void }) =>
     return (
         <div className="min-h-screen bg-[#02040a] flex flex-col items-center justify-center p-4 relative overflow-hidden font-sans text-white">
             <style>{`
-                /* Advanced Quantum Animations */
                 @keyframes orbit-cw { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
                 @keyframes orbit-ccw { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
                 @keyframes pulse-core { 0%, 100% { transform: scale(1); opacity: 0.8; box-shadow: 0 0 40px #22d3ee; } 50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 80px #a855f7; } }
@@ -162,14 +158,10 @@ export const LoginPage = ({ setUser }: { setUser: (u: UserProfile) => void }) =>
                 }
             `}</style>
             
-            {/* Immersive Background */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none flex items-center justify-center">
                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-950 via-[#02040a] to-[#000]"></div>
-                 
-                 {/* Quantum Structure */}
                  <div className="relative w-[800px] h-[800px] opacity-30">
                      <div className="quantum-core"></div>
-                     {/* Rings */}
                      <div className="quantum-ring w-[300px] h-[300px] top-[250px] left-[250px] animate-[orbit-cw_10s_linear_infinite] border-cyan-500/40">
                          <div className="electron" style={{top: '-5px', left: '50%'}}></div>
                      </div>
@@ -180,37 +172,26 @@ export const LoginPage = ({ setUser }: { setUser: (u: UserProfile) => void }) =>
                          <div className="electron" style={{bottom: '-5px', left: '50%'}}></div>
                      </div>
                  </div>
-
-                 {/* Floating Particles */}
-                 {[...Array(30)].map((_, i) => (
-                     <div key={i} className="absolute bg-cyan-400 rounded-full blur-[1px]" style={{
-                         top: `${Math.random() * 100}%`,
-                         left: `${Math.random() * 100}%`,
-                         width: `${Math.random() * 2 + 1}px`,
-                         height: `${Math.random() * 2 + 1}px`,
-                         animation: `particle-float ${3 + Math.random() * 5}s infinite linear`,
-                         animationDelay: `${Math.random() * 5}s`
-                     }}></div>
-                 ))}
             </div>
 
-            {/* Login Container */}
             <div className="relative z-10 w-full max-w-md perspective-[1000px]">
-                {/* Header */}
+                {onBack && (
+                    <button onClick={onBack} className="absolute -top-12 right-0 text-slate-500 hover:text-white transition-colors flex items-center gap-2 font-black uppercase tracking-widest text-[10px]">
+                        CLOSE <X size={16} />
+                    </button>
+                )}
+
                 <div className="text-center mb-10 relative group">
                     <div className="relative inline-block mb-4">
                         <div className="absolute inset-0 bg-cyan-500/40 blur-3xl rounded-full animate-pulse"></div>
                         <JidoBudiLogo className="relative z-10 drop-shadow-[0_0_30px_rgba(34,211,238,0.8)] transform group-hover:scale-110 transition-transform duration-500" />
                     </div>
-                    <h1 className="text-5xl font-black text-white tracking-tighter drop-shadow-2xl">
+                    <h1 className="text-5xl font-black text-white tracking-tighter drop-shadow-2xl uppercase">
                         {t('login_welcome')}
                     </h1>
                 </div>
 
-                {/* Card */}
                 <div className="login-card rounded-3xl overflow-hidden relative transform transition-transform hover:scale-[1.01] duration-500">
-                    
-                    {/* Tabs */}
                     <div className="flex border-b border-white/5 bg-black/20">
                         <button onClick={() => {setIsLogin(true); setError('');}} className={`flex-1 py-5 text-sm font-bold tracking-widest uppercase transition-all relative group ${isLogin ? 'text-cyan-400' : 'text-slate-500 hover:text-slate-300'}`}>
                             <span className="relative z-10">{t('login_btn')}</span>
@@ -265,7 +246,6 @@ export const LoginPage = ({ setUser }: { setUser: (u: UserProfile) => void }) =>
                         </button>
                     </form>
 
-                    {/* Footer */}
                     <div className="bg-black/40 p-4 border-t border-white/5 flex justify-between items-center px-8">
                          <div className="flex gap-4">
                             {['en', 'ms', 'zh'].map((lang) => (
